@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toggle_view"
+        android:title="@string/menu_action_toggle_view"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_assessment_white_24dp"/>
+
+    <item
+        android:id="@+id/delete_payments"
+        android:title="@string/menu_action_delete_payments"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/toggle_range"
+        android:title="@string/menu_action_toggle_range"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/settings"
+        android:title="@string/menu_action_settings"
+        app:showAsAction="never"/>
+
+
+</menu>
