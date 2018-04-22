@@ -77,15 +77,21 @@ public class MainActivity extends AppCompatActivity {
 
         //if settings file doesn't exist, create one with basic settings
 
-        if(!Arrays.toString(fileList()).contains(settingsFile)){
+        if(!Arrays.toString(fileList()).contains(settingsFile)||(true)){//remove the true after troubleshooting***********************
             try {
                 FileOutputStream fos=this.openFileOutput(settingsFile, Context.MODE_PRIVATE);
                 BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
                 osw.write("10");  // add in range
                 osw.newLine();
-                osw.write("380,270,250,350");    //add in maximums
+                osw.write("Food,380");   //Field 1
                 osw.newLine();
-                osw.write("Food,Car,Gifts,Misc");     //add strings for fields up to 5
+                osw.write("Car,270");    //Field 2
+                osw.newLine();
+                osw.write("Gifts,250");  //Field 3
+                osw.newLine();
+                osw.write("Misc,200");    //Field 4
+                osw.newLine();
+                osw.write("Travel,150");  //Field 5
                 osw.close();
                 fos.close();
             }catch(IOException ioe){
@@ -171,8 +177,13 @@ public class MainActivity extends AppCompatActivity {
             //create save $ exit button to move back to the main activity
             //in the main activity make the max value and radio button strings get
             // retrieved from the settings file, and load on create.
+
             Toast.makeText(MainActivity.this,"You have clicked on settings",
                     Toast.LENGTH_SHORT).show();
+            sort();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
