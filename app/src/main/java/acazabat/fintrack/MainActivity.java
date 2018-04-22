@@ -43,7 +43,7 @@ import static android.R.id.list;
 //to do:
 // add multi series to display function displaying multi or single series based on viewbool(add colors from string colors)
 //finish inputing range bool range adjustment (change min values)
-//add in a setting activity that is triggered from settings on click(has be be able to adjust text file)
+//add in a max from settings file.
 //on saving a purchase verify the price and date are in bounds (price greater than 0, and between 1 and day of the month)
 public class MainActivity extends AppCompatActivity {
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         //if settings file doesn't exist, create one with basic settings
 
-        if(!Arrays.toString(fileList()).contains(settingsFile)||(true)){//remove the true after troubleshooting***********************
+        if(!Arrays.toString(fileList()).contains(settingsFile)){
             try {
                 FileOutputStream fos=this.openFileOutput(settingsFile, Context.MODE_PRIVATE);
                 BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
@@ -171,12 +171,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
         if(item.getItemId()==R.id.settings){
-            //create a new activity that starts up on this selection.
-            //in settings activity have a view boolean, a range int, max int, strings for radio buttons
-            //create 2 input fields for range and max  and 5 string boxes that populate with current strings
-            //create save $ exit button to move back to the main activity
-            //in the main activity make the max value and radio button strings get
-            // retrieved from the settings file, and load on create.
+            //initializes the settings menu
 
             Toast.makeText(MainActivity.this,"You have clicked on settings",
                     Toast.LENGTH_SHORT).show();
