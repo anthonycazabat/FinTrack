@@ -58,7 +58,7 @@ public class PaymentsView extends AppCompatActivity {
             int c=0;
             //get data from file
             while (((line=bufferedReader.readLine()) != null)) {
-                scrollText=scrollText+c+":  "+line+"\n";
+                scrollText=scrollText+c+")       "+line+"\n";
                 maximumLines=c;
                 c++;
             }

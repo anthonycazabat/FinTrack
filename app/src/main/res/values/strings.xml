@@ -9,11 +9,14 @@
     <string name="menu_action_toggle_view">Toggle View</string>
     <string name="menu_action_settings">Settings</string>
     <string name="SettingsTitle">Settings</string>
-    <string name="Range">Range Value</string>
+    <string name="Range">Number of days Shown in Minimized View:</string>
     <string name="Field1">Field 1</string>
     <string name="Field2">Field 2</string>
     <string name="Field3">Field 3</string>
     <string name="Field4">Field 4</string>
     <string name="Field5">Field 5</string>
-    <string name="Exit">Select To Exit</string>
+    <string name="Name">Name(8 characters)</string>
+    <string name="Price">Price Goal</string>
+    <string name="Comment">Leave field blank if unused.</string>
+    <string name="Exit">Back to Main Menu</string>
 </resources>

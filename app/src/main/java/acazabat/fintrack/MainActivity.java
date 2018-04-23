@@ -402,7 +402,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void reset(){
         //below deletes old file, and creates a new empty one.
         System.out.println(new File(filename).getAbsoluteFile().delete());
