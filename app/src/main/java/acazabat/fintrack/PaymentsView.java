@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -36,6 +37,7 @@ public class PaymentsView extends AppCompatActivity {
     String monthOfTheYear=month.format(d);
     String Currentyear=year.format(d);
     String filename=monthOfTheYear+Currentyear;
+    int maximumLines=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class PaymentsView extends AppCompatActivity {
             //get data from file
             while (((line=bufferedReader.readLine()) != null)) {
                 scrollText=scrollText+c+":  "+line+"\n";
+                maximumLines=c;
                 c++;
             }
         }catch(IOException ioe){
@@ -64,66 +67,71 @@ public class PaymentsView extends AppCompatActivity {
         }
         textView.setText(scrollText);
     }
-    public void deleteLine(View view){
+    public void deleteLine(View view) {
         //put code for deleting a line
         EditText editText = (EditText) findViewById(R.id.editText3);
-        int lineToDelete= Integer.parseInt(editText.getText().toString());
+        int lineToDelete = Integer.parseInt(editText.getText().toString());
 
-        int[] dayArray=new int[300];
-        double[] priceArray=new double[300];
-        String[] fieldArray=new String[300];
+        int[] dayArray = new int[300];
+        double[] priceArray = new double[300];
+        String[] fieldArray = new String[300];
         int[] parseVar = new int[2];
-        try{
-            FileInputStream fis=this.openFileInput(filename);
-            InputStreamReader isr=new InputStreamReader(fis);
-            BufferedReader bufferedReader= new BufferedReader(isr);
+if ((maximumLines>=lineToDelete)&&(lineToDelete>=0)){
+        try {
+            FileInputStream fis = this.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
             String line;
-            int c=0;
+            int c = 0;
             //get data from file
-            while ((line=bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 int nextOfIndex = 0;
                 for (int i = -1; (i = line.indexOf(",", i + 1)) != -1; i++) {
                     parseVar[nextOfIndex] = i;
                     ++nextOfIndex;
                 }
-                dayArray[c]=Integer.parseInt(line.substring(0, parseVar[0]));
-                priceArray[c]=Double.parseDouble(line.substring(parseVar[0]+1,parseVar[1]));
-                fieldArray[c]=(line.substring(parseVar[1]+1));
-                System.out.println(dayArray[c]+","+priceArray[c]+","+fieldArray[c]);
+                dayArray[c] = Integer.parseInt(line.substring(0, parseVar[0]));
+                priceArray[c] = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
+                fieldArray[c] = (line.substring(parseVar[1] + 1));
+                System.out.println(dayArray[c] + "," + priceArray[c] + "," + fieldArray[c]);
                 c++;
             }
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         //delete data from file
         System.out.println(new File(filename).getAbsoluteFile().delete());
         try {
-            FileOutputStream fos=this.openFileOutput(filename, Context.MODE_PRIVATE);
-            BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
+            FileOutputStream fos = this.openFileOutput(filename, Context.MODE_PRIVATE);
+            BufferedWriter osw = new BufferedWriter(new OutputStreamWriter(fos));
             osw.write("");
             osw.close();
             fos.close();
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         //add the data back into file
         try {
-            FileOutputStream fos=this.openFileOutput(filename, Context.MODE_APPEND);
-            BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
-            for(int i=1;i<=dayOfTheMonth;i++){
-                for(int j=0;j<dayArray.length-1;j++){
-                    if((dayArray[j]==i)&&(j!=lineToDelete)){
-                        osw.write(dayArray[j]+","+priceArray[j]+","+fieldArray[j]);
+            FileOutputStream fos = this.openFileOutput(filename, Context.MODE_APPEND);
+            BufferedWriter osw = new BufferedWriter(new OutputStreamWriter(fos));
+            for (int i = 1; i <= dayOfTheMonth; i++) {
+                for (int j = 0; j < dayArray.length - 1; j++) {
+                    if ((dayArray[j] == i) && (j != lineToDelete)) {
+                        osw.write(dayArray[j] + "," + priceArray[j] + "," + fieldArray[j]);
                         osw.newLine();
-                        System.out.println(dayArray[j]+","+priceArray[j]+","+fieldArray[j]);
+                        System.out.println(dayArray[j] + "," + priceArray[j] + "," + fieldArray[j]);
                     }
                 }
             }
             osw.close();
             fos.close();
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }else{
+    Toast.makeText(PaymentsView.this,"line doesn't exist",
+            Toast.LENGTH_SHORT).show();
+    }
         displayPurchases();
 
     }

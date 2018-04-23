@@ -2,7 +2,9 @@ package acazabat.fintrack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -59,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
     String filename=monthOfTheYear+Currentyear;
     String settingsFile="settings";
     boolean rangebool=false;
-    boolean viewbool=false;
+    int viewint=0;
+    int WindowRange;
+    String[] Fields=new String[5];
+    double[] FieldVals=new double[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +73,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         EditText editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(( String.valueOf(dayOfTheMonth)));
-
         Toolbar mToolbar=(Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        //displays list of files in the app directory
         System.out.println(getFilesDir().toString());
         System.out.println("filelist ="+ Arrays.toString(fileList()));
 
         //if settings file doesn't exist, create one with basic settings
-
         if(!Arrays.toString(fileList()).contains(settingsFile)){
             try {
                 FileOutputStream fos=this.openFileOutput(settingsFile, Context.MODE_PRIVATE);
@@ -100,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //check if file exists, and if not create a blank file
-        //System.out.println(getFilesDir().toString());
-        //System.out.println("filelist ="+ Arrays.toString(fileList()));
         if(!Arrays.toString(fileList()).contains(filename)){
             try {
                 FileOutputStream fos=this.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -114,10 +116,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        System.out.println(getFilesDir().toString());
-        System.out.println("filelist ="+ Arrays.toString(fileList()));
 
-        //put all the current months data on the graph manually
+        //put an example set of data on the graph manually
         //reset();  //hard reset of all data use when need to reset whole month
         //savePaymentToFile(1,5,"food");
         //savePaymentToFile(4,5,"food");
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         //savePaymentToFile(12,5,"food");
         //savePaymentToFile(11,5,"food");
         //savePaymentToFile(25,780,"food");
+        getSettings();
         sort();
         putDataInGraph();
     }
@@ -142,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
             //input code to toggle from classic view to standard view
 
                 //in multiseries make a series for each grouping (pulling color from text, and adding for series)
-            if (viewbool==true){
-                viewbool=false;
+            if (viewint==5){
+                viewint=0;
             }else{
-                viewbool=true;
+                viewint=viewint+1;
             }
             putDataInGraph();
             Toast.makeText(MainActivity.this,"You have clicked on see individual or multiple",
@@ -193,18 +194,55 @@ public class MainActivity extends AppCompatActivity {
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         RadioButton checked=(RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         Field=checked.getText().toString();
-        savePaymentToFile(dayToInsert,price,Field); //calls the save payment function
+        if(dayToInsert<=dayOfTheMonth&&dayToInsert>=0&&price!=0){
+            savePaymentToFile(dayToInsert,price,Field); //calls the save payment function
+            editText.getText().clear();
+        }else{
+            Toast.makeText(MainActivity.this,"Day of the month or price is out of bounds",
+                    Toast.LENGTH_SHORT).show();
+        }
+
         sort();//will correct the order
         putDataInGraph();  //puts all the saved data for the current month on the graph
     }
-    /*  Delete when easy enough to display purchases from menu
-    public void displayDataList(View view){
-        //add code here for viewing a list of purchases populate with the last 50 purchases(if they exist)
-        sort();
-        Intent intent = new Intent(this, PaymentsView.class);
-        startActivity(intent);
+
+    public void getSettings(){
+        //add code here for grabbing settings and saving to variables, and to radio text.
+        RadioButton radioButton1=(RadioButton)findViewById(R.id.radioButton1);
+        RadioButton radioButton2=(RadioButton)findViewById(R.id.radioButton2);
+        RadioButton radioButton3=(RadioButton)findViewById(R.id.radioButton3);
+        RadioButton radioButton4=(RadioButton)findViewById(R.id.radioButton4);
+        RadioButton radioButton5=(RadioButton)findViewById(R.id.radioButton5);
+
+        try{
+            FileInputStream fis=this.openFileInput(settingsFile);
+            InputStreamReader isr=new InputStreamReader(fis);
+            BufferedReader bufferedReader= new BufferedReader(isr);
+            String line;
+            int c=0;
+            int i;
+            //get data from file
+            while ((line=bufferedReader.readLine()) != null) {
+                if (c==0){
+                    WindowRange=Integer.parseInt(line);
+                }else {
+                    i=-1;
+                    Fields[c-1]=(line.substring(0,line.indexOf(",",i+1)));
+                    FieldVals[c-1]=Double.parseDouble(line.substring(line.indexOf(",",i+1)+1));
+                }
+                c++;
+            }
+            radioButton1.setText(Fields[0]);
+            radioButton2.setText(Fields[1]);
+            radioButton3.setText(Fields[2]);
+            radioButton4.setText(Fields[3]);
+            radioButton5.setText(Fields[4]);
+
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
     }
-    */
+
     public void putDataInGraph(){
         //add data from settings file as well
         //initialize all vars
@@ -224,41 +262,7 @@ public class MainActivity extends AppCompatActivity {
         Optimal = new LineGraphSeries<DataPoint>();
         double[] yArray =new double[300];
         int [] dayArray=new int[300];
-        double[] maxVals=new double[5];
-        String[] fields=new String[5];
 
-        /*
-        try{
-            FileInputStream fis=this.openFileInput(settingsFile);
-            InputStreamReader isr=new InputStreamReader(fis);
-            BufferedReader bufferedReader= new BufferedReader(isr);
-            String line;
-            int c=0;
-            //get data from settings file
-            while ((line=bufferedReader.readLine()) != null) {
-                if (c==0){
-                    rangeint=Integer.parseInt(line);
-                    System.out.println(rangeint);
-                }else if(c==1){
-                    int d=0;
-                    for (int i = -1; (i = line.indexOf(",", i + 1)) != -1; i++) {
-                        maxVals[d]=Double.parseDouble(line.substring(i+1,line.indexOf(",", i + 1)));
-                        System.out.println(maxVals[d]);
-                    }
-                }else if (c==2){
-                    int d=0;
-                    for (int i = -1; (i = line.indexOf(",", i + 1)) != -1; i++) {
-                        fields[d]=(line.substring(i+1,line.indexOf(",", i + 1)));
-                        System.out.println(fields[d]);
-                    }
-                }
-                c++;
-            }
-        }catch(IOException ioe){
-            ioe.printStackTrace();
-        }
-
-        */
         //open file and get each of the data points
         try{
             FileInputStream fis=this.openFileInput(filename);
@@ -291,36 +295,49 @@ public class MainActivity extends AppCompatActivity {
             y = y + yArray[i];
             x = dayArray[i];
             purchases.appendData(new DataPoint(x, y), true,arrayLen );
-            if (viewbool) {
                 if (i == (dayOfTheMonth - rangeint)) {
                     rangeMin=y;
                 }
-            }
         }
         //add series to graph
         graph.addSeries(purchases);
+
+        //set the series color
+        if (viewint==0){
+            purchases.setColor(Color.BLACK);
+        }else if (viewint==1){
+            purchases.setColor(Color.parseColor("#5DADE2"));
+        }else if (viewint==2){
+            purchases.setColor(Color.parseColor("#CB4335"));
+        }else if (viewint==3){
+            purchases.setColor(Color.parseColor("#229954"));
+        }else if (viewint==4){
+            purchases.setColor(Color.parseColor("#F39C12"));
+        }else if (viewint==5){
+            purchases.setColor(Color.parseColor("#A569BD"));
+        }
+
         //create data series for optimal spending and add to graph
         Optimal.appendData(new DataPoint(0,0),true,2);
-        //max=maxVals[0]+maxVals[1]+maxVals[2]+maxVals[3]+maxVals[4];
+        if(viewint==0){
+            max=FieldVals[0]+FieldVals[1]+FieldVals[2]+FieldVals[3]+FieldVals[4];
+        }else{
+            max=FieldVals[viewint-1];
+        }
+
         optimalSpending=(max*dayOfTheMonth)/daysInMonth;
         Optimal.appendData(new DataPoint(dayOfTheMonth,optimalSpending),true,2);
         graph.addSeries(Optimal);
+        Optimal.setColor(Color.BLACK);
 
-        if(viewbool&&false){
-            if(dayOfTheMonth-rangeint>0) {
+        //sets the range of the view port
+        if(rangebool&&(dayOfTheMonth-rangeint>0)&&false){
                 graph.getViewport().setMinX(dayOfTheMonth-rangeint);
                 if((max*dayOfTheMonth)/(dayOfTheMonth-rangeint)<rangeMin) {   //make y equal to least between optimal and measured
                     graph.getViewport().setMinY((max*dayOfTheMonth)/(dayOfTheMonth-rangeint));
                 } else{
                     graph.getViewport().setMinY(rangeMin);
                 }
-            }else{
-                graph.getViewport().setMinX(0);
-                graph.getViewport().setMinY(0);
-            }
-            graph.getViewport().setMaxX(dayOfTheMonth + 1);
-            graph.getViewport().setXAxisBoundsManual(true);
-
         }else {
             graph.getViewport().setMinX(0);
             graph.getViewport().setMaxX(dayOfTheMonth + 1);

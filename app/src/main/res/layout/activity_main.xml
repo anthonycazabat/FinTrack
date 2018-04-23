@@ -29,8 +29,8 @@
         android:layout_width="178dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/button"
-        android:layout_toStartOf="@+id/button"
         android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
         android:ems="10"
         android:hint="INPUT COST"
         android:inputType="numberDecimal" />
@@ -45,7 +45,7 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radioButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/editText"
