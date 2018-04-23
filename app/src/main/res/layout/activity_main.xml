@@ -33,7 +33,7 @@
         android:layout_toStartOf="@+id/button"
         android:ems="10"
         android:hint="INPUT COST"
-        android:inputType="numberDecimal" />
+        android:inputType="numberSigned|numberDecimal" />
 
     <RadioGroup
         android:id="@+id/radioGroup"

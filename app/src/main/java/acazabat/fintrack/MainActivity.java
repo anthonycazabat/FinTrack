@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     int WindowRange;
     String[] Fields=new String[5];
     double[] FieldVals=new double[5];
+    String viewField="ALL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +146,14 @@ public class MainActivity extends AppCompatActivity {
                 //in multiseries make a series for each grouping (pulling color from text, and adding for series)
             if (viewint==5){
                 viewint=0;
+                viewField="ALL";
             }else{
                 viewint=viewint+1;
+                viewField=Fields[viewint-1];
             }
+
             putDataInGraph();
-            Toast.makeText(MainActivity.this,"You have clicked on see individual or multiple",
+            Toast.makeText(MainActivity.this,"You are viewing "+viewField.toString()+" data",
                     Toast.LENGTH_SHORT).show();
         }
         if(item.getItemId()==R.id.delete_payments){
@@ -164,18 +168,18 @@ public class MainActivity extends AppCompatActivity {
             //make the low ybound minimum x of optimal or total price up to that day
             if (rangebool==true){
                 rangebool=false;
+                Toast.makeText(MainActivity.this,"You are full view",
+                        Toast.LENGTH_SHORT).show();
             }else{
                 rangebool=true;
+                Toast.makeText(MainActivity.this,"You are in minimized view",
+                        Toast.LENGTH_SHORT).show();
             }
             putDataInGraph();
-            Toast.makeText(MainActivity.this,"You have clicked on toggle range",
-                    Toast.LENGTH_SHORT).show();
+
         }
         if(item.getItemId()==R.id.settings){
             //initializes the settings menu
-
-            Toast.makeText(MainActivity.this,"You have clicked on settings",
-                    Toast.LENGTH_SHORT).show();
             sort();
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -244,18 +248,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void putDataInGraph(){
-        //add data from settings file as well
         //initialize all vars
         PointsGraphSeries<DataPoint> purchases;
         LineGraphSeries<DataPoint> Optimal;
         GraphView graph=(GraphView) findViewById(R.id.graph);
         graph.removeAllSeries();
-        double max=1250;   //delete =1000 when pulling from settings file
-        int rangeint=10;
+        double finish;
         int[] parseVar = new int[2];
         int x;
         double y=0;
-        double rangeMin=0;
+        double rangeMinX=0;
+        double rangeMaxX=dayOfTheMonth + 1;
+        double rangeMinY;
+        double rangeMaxY;
         int arrayLen=0;
         double optimalSpending;
         purchases = new PointsGraphSeries<DataPoint>();
@@ -277,11 +282,20 @@ public class MainActivity extends AppCompatActivity {
                     parseVar[nextOfIndex] = i;
                     ++nextOfIndex;
                 }
-                dayArray[c]=Integer.parseInt(line.substring(0, parseVar[0]));
-                yArray[c]=Double.parseDouble(line.substring(parseVar[0]+1,parseVar[1]));
-                String Field=(line.substring(parseVar[1]+1));
-                System.out.println(dayArray[c]+","+yArray[c]+","+Field);
-                c++;
+                //display the relevant data
+                if(viewField=="ALL") {
+                    dayArray[c] = Integer.parseInt(line.substring(0, parseVar[0]));
+                    yArray[c] = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
+                    String Field = (line.substring(parseVar[1] + 1));
+                    System.out.println(dayArray[c] + "," + yArray[c] + "," + Field);
+                    c++;
+                }else if((line.substring(parseVar[1]+1)).equals(viewField)) {
+                    dayArray[c] = Integer.parseInt(line.substring(0, parseVar[0]));
+                    yArray[c] = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
+                    String Field = (line.substring(parseVar[1] + 1));
+                    System.out.println(dayArray[c] + "," + yArray[c] + "," + Field);
+                    c++;
+                }
             }
         }catch(IOException ioe){
             ioe.printStackTrace();
@@ -290,15 +304,47 @@ public class MainActivity extends AppCompatActivity {
         for (int i =0;yArray[i]!=0;i++){
             arrayLen++;
         }
+
+        //create data trend for graph
+        if(viewint==0){
+            finish=FieldVals[0]+FieldVals[1]+FieldVals[2]+FieldVals[3]+FieldVals[4];
+        }else{
+            finish=FieldVals[viewint-1];
+        }
+        optimalSpending=(finish*dayOfTheMonth)/daysInMonth;
+
+        //give initial values for max and min y
+        if (rangebool&&((dayOfTheMonth-WindowRange)>0)) {
+            rangeMinY = finish*(dayOfTheMonth-WindowRange)/daysInMonth;
+        }else{
+            rangeMinY = 0;
+        }
+        rangeMaxY=yArray[0];
+
         //put the data into data series for graph
         for(int i = 0; i<arrayLen;i++) {
             y = y + yArray[i];
             x = dayArray[i];
             purchases.appendData(new DataPoint(x, y), true,arrayLen );
-                if (i == (dayOfTheMonth - rangeint)) {
-                    rangeMin=y;
+            if (rangebool&&((dayOfTheMonth-WindowRange)>0)){
+                if (x>=(dayOfTheMonth-WindowRange)){
+                    if (y < rangeMinY) rangeMinY = y;
+                    if (y > rangeMaxY) rangeMaxY = y;
                 }
+            }else {
+                if (y < rangeMinY) rangeMinY = y;
+                if (y > rangeMaxY) rangeMaxY = y;
+            }
         }
+
+        //find absolute max and min
+        if (optimalSpending>= y){
+            rangeMaxY=optimalSpending;
+        }else{
+            rangeMaxY=y;
+        }
+        if (rangebool&&((dayOfTheMonth-WindowRange)>0))rangeMinX = dayOfTheMonth-WindowRange;
+
         //add series to graph
         graph.addSeries(purchases);
 
@@ -317,39 +363,19 @@ public class MainActivity extends AppCompatActivity {
             purchases.setColor(Color.parseColor("#A569BD"));
         }
 
-        //create data series for optimal spending and add to graph
+        //create and add optimal spending to graph
         Optimal.appendData(new DataPoint(0,0),true,2);
-        if(viewint==0){
-            max=FieldVals[0]+FieldVals[1]+FieldVals[2]+FieldVals[3]+FieldVals[4];
-        }else{
-            max=FieldVals[viewint-1];
-        }
-
-        optimalSpending=(max*dayOfTheMonth)/daysInMonth;
         Optimal.appendData(new DataPoint(dayOfTheMonth,optimalSpending),true,2);
         graph.addSeries(Optimal);
         Optimal.setColor(Color.BLACK);
 
         //sets the range of the view port
-        if(rangebool&&(dayOfTheMonth-rangeint>0)&&false){
-                graph.getViewport().setMinX(dayOfTheMonth-rangeint);
-                if((max*dayOfTheMonth)/(dayOfTheMonth-rangeint)<rangeMin) {   //make y equal to least between optimal and measured
-                    graph.getViewport().setMinY((max*dayOfTheMonth)/(dayOfTheMonth-rangeint));
-                } else{
-                    graph.getViewport().setMinY(rangeMin);
-                }
-        }else {
-            graph.getViewport().setMinX(0);
-            graph.getViewport().setMaxX(dayOfTheMonth + 1);
-            graph.getViewport().setXAxisBoundsManual(true);
-            graph.getViewport().setMinY(0);
-        }
+            graph.getViewport().setMinX(rangeMinX);
+            graph.getViewport().setMaxX(rangeMaxX);
+            graph.getViewport().setMinY(rangeMinY);
+            graph.getViewport().setMaxY(rangeMaxY);
 
-        if (optimalSpending>= y){
-            graph.getViewport().setMaxY(optimalSpending);
-        }else{
-            graph.getViewport().setMaxY(y);
-        }
+        graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setYAxisBoundsManual(true);
 
         graph.getViewport().setScalable(true);
