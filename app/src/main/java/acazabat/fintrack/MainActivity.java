@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
@@ -43,10 +44,9 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-// add multi series to display function displaying multi or single series based on viewbool(add colors from string colors)
-//finish inputing range bool range adjustment (change min values)
-//add in a max from settings file.
-//on saving a purchase verify the price and date are in bounds (price greater than 0, and between 1 and day of the month)
+//Show max in settings file.  Check to see if displays  Create TextField and on any field update update maximum value. create the override that checks for val change.
+//show value of designed max, and actual max.  2 text fields on graph when startup populate those fields with
+//Have to fix the days in the month when changing to previous month views. Maybe a switch statement.
 public class MainActivity extends AppCompatActivity {
 
 //initialize the main activity global variables
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     String[] Fields=new String[5];
     double[] FieldVals=new double[5];
     String viewField="ALL";
+    int CurrentMonthView=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             //make the low ybound minimum x of optimal or total price up to that day
             if (rangebool==true){
                 rangebool=false;
-                Toast.makeText(MainActivity.this,"You are full view",
+                Toast.makeText(MainActivity.this,"You are in full view",
                         Toast.LENGTH_SHORT).show();
             }else{
                 rangebool=true;
@@ -184,6 +185,48 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
 
+        }
+        if(item.getItemId()==R.id.ViewOther){
+            //Calls Previous Months up to 3
+            if(CurrentMonthView==0){
+                //look at the previous month
+                if(Integer.parseInt(monthOfTheYear)>0) {
+                    monthOfTheYear = (Integer.parseInt(monthOfTheYear) - 1) + "";
+
+                }else {
+                    Currentyear=(Integer.parseInt(year.format(d))-1)+"";
+                    monthOfTheYear="12";
+                }
+                daysInMonth= Calendar.getInstance(Locale.US).getActualMaximum(Calendar.DAY_OF_MONTH);
+                dayOfTheMonth = daysInMonth;
+                filename=monthOfTheYear+Currentyear;
+
+                CurrentMonthView=1;
+            }else if(CurrentMonthView==1){
+                //look at the month 1 month ago
+                if(Integer.parseInt(monthOfTheYear)-1>0) {
+                    monthOfTheYear = (Integer.parseInt(monthOfTheYear) - 1) + "";
+
+                }else {
+                    Currentyear=(Integer.parseInt(year.format(d))-1)+"";
+                    monthOfTheYear="12";
+                }
+                daysInMonth= Calendar.getInstance(Locale.US).getActualMaximum(Integer.parseInt(monthOfTheYear));
+                dayOfTheMonth = daysInMonth;
+                filename=monthOfTheYear+Currentyear;
+
+                CurrentMonthView=2;
+            }else if(CurrentMonthView==2){
+                //look at the current month
+                dayOfTheMonth = Integer.parseInt(day.format(d));
+                monthOfTheYear=month.format(d);
+                Currentyear=year.format(d);
+                filename=monthOfTheYear+Currentyear;
+                CurrentMonthView=0;
+            }
+
+            sort();
+            putDataInGraph();
         }
         return super.onOptionsItemSelected(item);
     }

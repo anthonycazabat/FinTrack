@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
+import android.text.TextWatcher;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,7 +31,22 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getValues();
+        displayMax();
+    }
 
+    public void displayMax(){
+        int max;
+        TextView textView14= (TextView) findViewById(R.id.textView14);
+
+        EditText editText11 = (EditText) findViewById(R.id.editText11);
+        EditText editText12 = (EditText) findViewById(R.id.editText12);
+        EditText editText13 = (EditText) findViewById(R.id.editText13);
+        EditText editText14 = (EditText) findViewById(R.id.editText14);
+        EditText editText15 = (EditText) findViewById(R.id.editText15);
+
+        max= Integer.parseInt(String.valueOf(editText11.getText()))+ Integer.parseInt(String.valueOf(editText12.getText()))+ Integer.parseInt(String.valueOf(editText13.getText()))+ Integer.parseInt(String.valueOf(editText14.getText()))+ Integer.parseInt(String.valueOf(editText15.getText()));
+
+        textView14.setText(max);
     }
 
     public void getValues(){
@@ -43,6 +61,8 @@ public class SettingsActivity extends AppCompatActivity {
         EditText editText13 = (EditText) findViewById(R.id.editText13);
         EditText editText14 = (EditText) findViewById(R.id.editText14);
         EditText editText15 = (EditText) findViewById(R.id.editText15);
+
+
 
         try{
             FileInputStream fis=this.openFileInput(settingsFile);
