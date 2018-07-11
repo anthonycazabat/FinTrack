@@ -44,9 +44,11 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-//Show max in settings file.  Check to see if displays  Create TextField and on any field update update maximum value. create the override that checks for val change.
+//delete toggle view change from main activity, drop down menu, and from settings file
+//make a view previous months witch displays total in month, and from all sections individually.
+//create the override that checks for val change.
 //show value of designed max, and actual max.  2 text fields on graph when startup populate those fields with
-//Have to fix the days in the month when changing to previous month views. Maybe a switch statement.
+
 public class MainActivity extends AppCompatActivity {
 
 //initialize the main activity global variables
