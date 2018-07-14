@@ -44,9 +44,8 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-//delete toggle view change from main activity, drop down menu, and from settings file
 //make a view previous months witch displays total in month, and from all sections individually.
-//create the override that checks for val change.
+//finish the viewAll activity to show values.
 //show value of designed max, and actual max.  2 text fields on graph when startup populate those fields with
 
 public class MainActivity extends AppCompatActivity {
@@ -165,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PaymentsView.class);
             startActivity(intent);
         }
+        /*
         if(item.getItemId()==R.id.toggle_range){
             //if range boolean is false make current day of the month-range (as long as not less than 0) the low bound.
             //make the high bound of x the day of the month
@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             putDataInGraph();
 
         }
+        */
         if(item.getItemId()==R.id.settings){
             //initializes the settings menu
             sort();
@@ -188,6 +189,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if(item.getItemId()==R.id.ViewAll){
+            //initializes the settings menu
+            sort();
+            Intent intent = new Intent(this, ViewAll.class);
+            startActivity(intent);
+
+        }
+        /*
         if(item.getItemId()==R.id.ViewOther){
             //Calls Previous Months up to 3
             if(CurrentMonthView==0){
@@ -230,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
             sort();
             putDataInGraph();
         }
+        */
         return super.onOptionsItemSelected(item);
     }
 

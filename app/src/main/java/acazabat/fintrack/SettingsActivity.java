@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.EditText;
 import android.text.TextWatcher;
@@ -21,11 +22,30 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 
+
 public class SettingsActivity extends AppCompatActivity {
     String settingsFile="settings";
     int range=10;
     String[] Fields=new String[5];
     double[] FieldVals=new double[5];
+
+
+    TextWatcher tw=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            displayMax();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +53,22 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         getValues();
         displayMax();
+        EditText editText11 = (EditText) findViewById(R.id.editText11);
+        EditText editText12 = (EditText) findViewById(R.id.editText12);
+        EditText editText13 = (EditText) findViewById(R.id.editText13);
+        EditText editText14 = (EditText) findViewById(R.id.editText14);
+        EditText editText15 = (EditText) findViewById(R.id.editText15);
+        editText11.addTextChangedListener(tw);
+        editText12.addTextChangedListener(tw);
+        editText13.addTextChangedListener(tw);
+        editText14.addTextChangedListener(tw);
+        editText15.addTextChangedListener(tw);
+
 
     }
+
+
+
 
 
 
@@ -58,7 +92,6 @@ public class SettingsActivity extends AppCompatActivity {
         EditText editText6 = (EditText) findViewById(R.id.editText6);
         EditText editText7 = (EditText) findViewById(R.id.editText7);
         EditText editText8 = (EditText) findViewById(R.id.editText8);
-        EditText editText9 = (EditText) findViewById(R.id.editText9);
         EditText editText10 = (EditText) findViewById(R.id.editText10);
         EditText editText11 = (EditText) findViewById(R.id.editText11);
         EditText editText12 = (EditText) findViewById(R.id.editText12);
@@ -90,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
             ioe.printStackTrace();
         }
 
-        editText9.setText(String.valueOf(range));
+
 
         editText5.setText(Fields[0]);
         editText6.setText(Fields[1]);
@@ -113,7 +146,7 @@ public class SettingsActivity extends AppCompatActivity {
         EditText editText6 = (EditText) findViewById(R.id.editText6);
         EditText editText7 = (EditText) findViewById(R.id.editText7);
         EditText editText8 = (EditText) findViewById(R.id.editText8);
-        EditText editText9 = (EditText) findViewById(R.id.editText9);
+
         EditText editText10 = (EditText) findViewById(R.id.editText10);
         EditText editText11 = (EditText) findViewById(R.id.editText11);
         EditText editText12 = (EditText) findViewById(R.id.editText12);
@@ -124,7 +157,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             FileOutputStream fos=this.openFileOutput(settingsFile, Context.MODE_APPEND);
             BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
-            osw.write(editText9.getText().toString());
+            osw.write("10");
             for(int i=0;i<=4;i++){
                 osw.newLine();
                 if (i==0){

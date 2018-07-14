@@ -11,18 +11,21 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PaymentsView"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".SettingsActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".PaymentsView"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".SettingsActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".ViewAll"></activity>
     </application>
 
 </manifest>

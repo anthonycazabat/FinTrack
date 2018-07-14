@@ -8,7 +8,7 @@
     <string name="menu_action_see_individual">See Individual</string>
     <string name="menu_action_toggle_view">Toggle View</string>
     <string name="menu_action_settings">Settings</string>
-    <string name="menu_action_view_other">View Other Months</string>
+    <string name="menu_action_view_all">View All Payments</string>
     <string name="SettingsTitle">Settings</string>
     <string name="Range">Number of days Shown in Minimized View:</string>
     <string name="Field1">Field 1</string>
@@ -21,5 +21,6 @@
     <string name="Comment">Leave field blank if unused.</string>
     <string name="Max">Max Spending</string>
     <string name="MaxVal">MaxField.</string>
+    <string name="DisplayAllTitle">Full Purchase Totals</string>
     <string name="Exit">Back to Main Menu</string>
 </resources>

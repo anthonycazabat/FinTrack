@@ -14,13 +14,8 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/toggle_range"
-        android:title="@string/menu_action_toggle_range"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/ViewOther"
-        android:title="@string/menu_action_view_other"
+        android:id="@+id/ViewAll"
+        android:title="@string/menu_action_view_all"
         app:showAsAction="never"/>
 
     <item
