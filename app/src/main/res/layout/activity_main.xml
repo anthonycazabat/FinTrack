@@ -9,7 +9,7 @@
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="475dp"
         android:layout_marginTop="60dp" />
 
     <Button
@@ -133,5 +133,47 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/graph"
+        android:layout_marginEnd="-131dp"
+        android:layout_marginRight="-131dp"
+        android:layout_toStartOf="@+id/textView15"
+        android:layout_toLeftOf="@+id/textView15"
+        android:text="@string/currenttotal" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/graph"
+        android:layout_marginStart="131dp"
+        android:layout_marginLeft="131dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/graph"
+        android:layout_toStartOf="@+id/textView19"
+        android:layout_toLeftOf="@+id/textView19"
+        android:text="@string/optimalmaximum" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/graph"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
+        android:text="TextView" />
 
 </RelativeLayout>

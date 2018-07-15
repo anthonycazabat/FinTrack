@@ -132,7 +132,7 @@ public class ViewAll extends AppCompatActivity {
                 */
 
 
-                
+
 
                 //get data from file
                 while (((line = bufferedReader.readLine()) != null)) {

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -44,12 +45,13 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-//make a view previous months witch displays total in month, and from all sections individually.
 //finish the viewAll activity to show values.
-//show value of designed max, and actual max.  2 text fields on graph when startup populate those fields with
+    //fix so that looking at previous months filename is correct 0618 not 618
+    //parse lines of data into field, and value
+    //add values for each field into 1 set.
+    //display fieldname and values
 
 public class MainActivity extends AppCompatActivity {
-
 //initialize the main activity global variables
     int daysInMonth= Calendar.getInstance(Locale.US).getActualMaximum(Calendar.DAY_OF_MONTH);
     SimpleDateFormat day=new SimpleDateFormat("dd");
@@ -322,6 +324,8 @@ public class MainActivity extends AppCompatActivity {
         Optimal = new LineGraphSeries<DataPoint>();
         double[] yArray =new double[300];
         int [] dayArray=new int[300];
+        TextView textViewcurrent= (TextView) findViewById(R.id.textView15);
+        TextView textViewoptimal= (TextView) findViewById(R.id.textView19);
 
         //open file and get each of the data points
         try{
@@ -367,6 +371,8 @@ public class MainActivity extends AppCompatActivity {
             finish=FieldVals[viewint-1];
         }
         optimalSpending=(finish*dayOfTheMonth)/daysInMonth;
+        //add the max spending value(finish) into the textview
+        textViewoptimal.setText(Double.toString(finish));
 
         //give initial values for max and min y
         if (rangebool&&((dayOfTheMonth-WindowRange)>0)) {
@@ -391,7 +397,8 @@ public class MainActivity extends AppCompatActivity {
                 if (y > rangeMaxY) rangeMaxY = y;
             }
         }
-
+        //put the current spending amount into a text view.
+        textViewcurrent.setText(Double.toString(y));
         //find absolute max and min
         if (optimalSpending>= y){
             rangeMaxY=optimalSpending;

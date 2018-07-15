@@ -22,5 +22,7 @@
     <string name="Max">Max Spending</string>
     <string name="MaxVal">MaxField.</string>
     <string name="DisplayAllTitle">Full Purchase Totals</string>
+    <string name="currenttotal">Current Totals:  </string>
+    <string name="optimalmaximum">Max spending:  </string>
     <string name="Exit">Back to Main Menu</string>
 </resources>
