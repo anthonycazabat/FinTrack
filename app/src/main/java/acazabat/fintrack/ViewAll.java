@@ -47,50 +47,26 @@ public class ViewAll extends AppCompatActivity {
         //then display each of the field names followed by their total values.
         //leave a space and move to the next file if exist
 
+        double finish;
+        int[] parseVar = new int[2];
+        int x;
+        double y=0;
+
+
         TextView textView = (TextView) findViewById(R.id.textView17);
         String scrollText="";
         //open file and get each line of text for past year.
 
-        for (int i=11; i>=0;i--) {
-
+        for (int l=11; l>=0;l--) {
             try {
                 FileInputStream fis = this.openFileInput(filename);
                 InputStreamReader isr = new InputStreamReader(fis);
                 BufferedReader bufferedReader = new BufferedReader(isr);
                 String line;
-                int c = 0;
-                float monthtotal=0;
-                String[] fieldarray=new String[10];
-                float[] valuearray=new float[10];
+                double monthtotal=0;
+                String[] fieldarray=new String[16];
+                double[] valuearray=new double[16];
 
-
-
-
-
-
-/*
-                double finish;
-                int[] parseVar = new int[2];
-                int x;
-                double y=0;
-                double rangeMinX=0;
-                double rangeMaxX=dayOfTheMonth + 1;
-                double rangeMinY;
-                double rangeMaxY;
-                int arrayLen=0;
-                double optimalSpending;
-                purchases = new PointsGraphSeries<DataPoint>();
-                Optimal = new LineGraphSeries<DataPoint>();
-                double[] yArray =new double[300];
-                int [] dayArray=new int[300];
-
-                //open file and get each of the data points
-                try{
-                    FileInputStream fis=this.openFileInput(filename);
-                    InputStreamReader isr=new InputStreamReader(fis);
-                    BufferedReader bufferedReader= new BufferedReader(isr);
-                    String line;
-                    int c=0;
                     //get data from file
                     while ((line=bufferedReader.readLine()) != null) {
                         int nextOfIndex = 0;
@@ -98,53 +74,28 @@ public class ViewAll extends AppCompatActivity {
                             parseVar[nextOfIndex] = i;
                             ++nextOfIndex;
                         }
-                        //display the relevant data
-                        if(viewField=="ALL") {
-                            dayArray[c] = Integer.parseInt(line.substring(0, parseVar[0]));
-                            yArray[c] = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
+                        //get line data
+                            double value = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
                             String Field = (line.substring(parseVar[1] + 1));
-                            System.out.println(dayArray[c] + "," + yArray[c] + "," + Field);
-                            c++;
-                        }else if((line.substring(parseVar[1]+1)).equals(viewField)) {
-                            dayArray[c] = Integer.parseInt(line.substring(0, parseVar[0]));
-                            yArray[c] = Double.parseDouble(line.substring(parseVar[0] + 1, parseVar[1]));
-                            String Field = (line.substring(parseVar[1] + 1));
-                            System.out.println(dayArray[c] + "," + yArray[c] + "," + Field);
-                            c++;
+                        int j=0;
+                        boolean saved=false;
+                        while (!saved) {
+                            if (fieldarray[j]==null){
+                                fieldarray[j]=Field;
+                                valuearray[j]=value;
+                                saved=true;
+                            }else if (fieldarray[j]==Field){
+                                //add value to j of value array
+                                valuearray[j]=valuearray[j]+value;
+                                saved=true;
+                            }
+                            j++;
                         }
+                        monthtotal=monthtotal+value;
                     }
-                }catch(IOException ioe){
-                    ioe.printStackTrace();
-                }
-                //find the size of the data array
-                for (int i =0;yArray[i]!=0;i++){
-                    arrayLen++;
-                }
 
-                //create data trend for graph
-                if(viewint==0){
-                    finish=FieldVals[0]+FieldVals[1]+FieldVals[2]+FieldVals[3]+FieldVals[4];
-                }else{
-                    finish=FieldVals[viewint-1];
-                }
-                optimalSpending=(finish*dayOfTheMonth)/daysInMonth;
-
-                */
-
-
-
-
-                //get data from file
-                while (((line = bufferedReader.readLine()) != null)) {
-                    //parse out field and value from line, and save to own group.
-
-                    scrollText = scrollText + c + ")       " + line + "\n";
-                    maximumLines = c;
-                    c++;
-                }
-
-                scrollText=scrollText+ filename+" TOTAL= "+ monthtotal +"\n";
-                c=0;
+                scrollText=scrollText+ filename+" TOTAL= "+ Double.toString(monthtotal) +"\n";
+                int c=0;
                 while (fieldarray[c]!=null){
                     //check for fields, and display
                     scrollText=scrollText+ fieldarray[c]+valuearray[c]+"\n";
@@ -155,15 +106,22 @@ public class ViewAll extends AppCompatActivity {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            //set the month and year for next file
             if(currentmonth==1){
                 currentyear--;
                 currentmonth=12;
             }else{
                 currentmonth--;
             }
-            filename=Integer.toString(currentmonth)+Integer.toString(currentyear);
+            //update the filename to next file
+        if (currentmonth>=10) {
+            filename = Integer.toString(currentmonth) + Integer.toString(currentyear);
+        }else{
+            filename = "0"+Integer.toString(currentmonth) + Integer.toString(currentyear);
+        }
 
-            //maybe check if file exists
+            //Check if file exists
+
 
         }
 

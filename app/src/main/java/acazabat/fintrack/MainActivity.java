@@ -45,11 +45,7 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-//finish the viewAll activity to show values.
-    //fix so that looking at previous months filename is correct 0618 not 618
-    //parse lines of data into field, and value
-    //add values for each field into 1 set.
-    //display fieldname and values
+//
 
 public class MainActivity extends AppCompatActivity {
 //initialize the main activity global variables
@@ -59,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat year=new SimpleDateFormat("yy");
     Date d = new Date();
     int dayOfTheMonth = Integer.parseInt(day.format(d));
+
     String monthOfTheYear=month.format(d);
     String Currentyear=year.format(d);
     String filename=monthOfTheYear+Currentyear;
