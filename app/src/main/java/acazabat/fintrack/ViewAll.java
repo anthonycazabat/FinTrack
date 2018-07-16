@@ -84,7 +84,7 @@ public class ViewAll extends AppCompatActivity {
                                 fieldarray[j]=Field;
                                 valuearray[j]=value;
                                 saved=true;
-                            }else if (fieldarray[j]==Field){
+                            }else if (fieldarray[j].equals(Field)){
                                 //add value to j of value array
                                 valuearray[j]=valuearray[j]+value;
                                 saved=true;

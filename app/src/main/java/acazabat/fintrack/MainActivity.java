@@ -45,6 +45,8 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
+//In viewAll mode change the numbering to round to the 2nd digit.  Maybe float does this automatically
+
 //add in last months purchases in delete purchases view, and allow for deletions of those.
     //on load loop over twice for this and last month
     //save line value for demarcation between this and last month.
