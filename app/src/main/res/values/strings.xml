@@ -24,5 +24,7 @@
     <string name="DisplayAllTitle">Full Purchase Totals</string>
     <string name="currenttotal">Current Totals:  </string>
     <string name="optimalmaximum">Max spending:  </string>
+    <string name="other">"                     OTHER: \n This wont show on Graph View \n adds to Max Spending below"</string>
     <string name="Exit">Back to Main Menu</string>
+
 </resources>

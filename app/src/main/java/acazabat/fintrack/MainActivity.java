@@ -45,7 +45,16 @@ import java.util.Locale;
 import static android.R.id.list;
 
 //to do:
-//
+//add in last months purchases in delete purchases view, and allow for deletions of those.
+    //on load loop over twice for this and last month
+    //save line value for demarcation between this and last month.
+    //on delete, pick filename based on demarcation value, and run delete based on that.
+    //verify that the purchases run from most recent to oldest.
+
+//Clean up code (done on main activity, do on settingsactivity, and viewall)
+    //delete all unnecessary lines of code
+    //comment all java script
+    //minimize code as much as possible
 
 public class MainActivity extends AppCompatActivity {
 //initialize the main activity global variables
@@ -62,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     String settingsFile="settings";
     boolean rangebool=false;
     int viewint=0;
-    int WindowRange;
+    double other;
     String[] Fields=new String[5];
     double[] FieldVals=new double[5];
     String viewField="ALL";
@@ -87,17 +96,17 @@ public class MainActivity extends AppCompatActivity {
             try {
                 FileOutputStream fos=this.openFileOutput(settingsFile, Context.MODE_PRIVATE);
                 BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
-                osw.write("10");  // add in range
+                osw.write("500");  // add in other miscelaneous values/autopay
                 osw.newLine();
-                osw.write("Food,380");   //Field 1
+                osw.write("Food,400");   //Field 1
                 osw.newLine();
-                osw.write("Car,270");    //Field 2
+                osw.write("Car,250");    //Field 2
                 osw.newLine();
                 osw.write("Gifts,250");  //Field 3
                 osw.newLine();
                 osw.write("Misc,200");    //Field 4
                 osw.newLine();
-                osw.write("Travel,150");  //Field 5
+                osw.write("Project,200");  //Field 5
                 osw.close();
                 fos.close();
             }catch(IOException ioe){
@@ -142,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.toggle_view){
-            //input code to toggle from classic view to standard view
-
-                //in multiseries make a series for each grouping (pulling color from text, and adding for series)
+            //in multiseries make a series for each grouping (pulling color from text, and adding for series)
             if (viewint==5){
                 viewint=0;
                 viewField="ALL";
@@ -152,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 viewint=viewint+1;
                 viewField=Fields[viewint-1];
             }
-
             putDataInGraph();
             Toast.makeText(MainActivity.this,"You are viewing "+viewField.toString()+" data",
                     Toast.LENGTH_SHORT).show();
@@ -163,24 +169,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PaymentsView.class);
             startActivity(intent);
         }
-        /*
-        if(item.getItemId()==R.id.toggle_range){
-            //if range boolean is false make current day of the month-range (as long as not less than 0) the low bound.
-            //make the high bound of x the day of the month
-            //make the low ybound minimum x of optimal or total price up to that day
-            if (rangebool==true){
-                rangebool=false;
-                Toast.makeText(MainActivity.this,"You are in full view",
-                        Toast.LENGTH_SHORT).show();
-            }else{
-                rangebool=true;
-                Toast.makeText(MainActivity.this,"You are in minimized view",
-                        Toast.LENGTH_SHORT).show();
-            }
-            putDataInGraph();
-
-        }
-        */
         if(item.getItemId()==R.id.settings){
             //initializes the settings menu
             sort();
@@ -195,50 +183,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
         }
-        /*
-        if(item.getItemId()==R.id.ViewOther){
-            //Calls Previous Months up to 3
-            if(CurrentMonthView==0){
-                //look at the previous month
-                if(Integer.parseInt(monthOfTheYear)>0) {
-                    monthOfTheYear = (Integer.parseInt(monthOfTheYear) - 1) + "";
 
-                }else {
-                    Currentyear=(Integer.parseInt(year.format(d))-1)+"";
-                    monthOfTheYear="12";
-                }
-                daysInMonth= Calendar.getInstance(Locale.US).getActualMaximum(Calendar.DAY_OF_MONTH);
-                dayOfTheMonth = daysInMonth;
-                filename=monthOfTheYear+Currentyear;
-
-                CurrentMonthView=1;
-            }else if(CurrentMonthView==1){
-                //look at the month 1 month ago
-                if(Integer.parseInt(monthOfTheYear)-1>0) {
-                    monthOfTheYear = (Integer.parseInt(monthOfTheYear) - 1) + "";
-
-                }else {
-                    Currentyear=(Integer.parseInt(year.format(d))-1)+"";
-                    monthOfTheYear="12";
-                }
-                daysInMonth= Calendar.getInstance(Locale.US).getActualMaximum(Integer.parseInt(monthOfTheYear));
-                dayOfTheMonth = daysInMonth;
-                filename=monthOfTheYear+Currentyear;
-
-                CurrentMonthView=2;
-            }else if(CurrentMonthView==2){
-                //look at the current month
-                dayOfTheMonth = Integer.parseInt(day.format(d));
-                monthOfTheYear=month.format(d);
-                Currentyear=year.format(d);
-                filename=monthOfTheYear+Currentyear;
-                CurrentMonthView=0;
-            }
-
-            sort();
-            putDataInGraph();
-        }
-        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -282,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             //get data from file
             while ((line=bufferedReader.readLine()) != null) {
                 if (c==0){
-                    WindowRange=Integer.parseInt(line);
+                    other=Double.parseDouble(line);
                 }else {
                     i=-1;
                     Fields[c-1]=(line.substring(0,line.indexOf(",",i+1)));
@@ -372,11 +317,7 @@ public class MainActivity extends AppCompatActivity {
         textViewoptimal.setText(Double.toString(finish));
 
         //give initial values for max and min y
-        if (rangebool&&((dayOfTheMonth-WindowRange)>0)) {
-            rangeMinY = finish*(dayOfTheMonth-WindowRange)/daysInMonth;
-        }else{
             rangeMinY = 0;
-        }
         rangeMaxY=yArray[0];
 
         //put the data into data series for graph
@@ -384,16 +325,10 @@ public class MainActivity extends AppCompatActivity {
             y = y + yArray[i];
             x = dayArray[i];
             purchases.appendData(new DataPoint(x, y), true,arrayLen );
-            if (rangebool&&((dayOfTheMonth-WindowRange)>0)){
-                if (x>=(dayOfTheMonth-WindowRange)){
-                    if (y < rangeMinY) rangeMinY = y;
-                    if (y > rangeMaxY) rangeMaxY = y;
-                }
-            }else {
                 if (y < rangeMinY) rangeMinY = y;
                 if (y > rangeMaxY) rangeMaxY = y;
-            }
         }
+
         //put the current spending amount into a text view.
         textViewcurrent.setText(Double.toString(y));
         //find absolute max and min
@@ -402,7 +337,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             rangeMaxY=y;
         }
-        if (rangebool&&((dayOfTheMonth-WindowRange)>0))rangeMinX = dayOfTheMonth-WindowRange;
 
         //add series to graph
         graph.addSeries(purchases);
@@ -477,6 +411,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sort(){
+        //sets the new order for the data.
         int[] dayArray=new int[300];
         double[] priceArray=new double[300];
         String[] fieldArray=new String[300];
@@ -504,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
             ioe.printStackTrace();
         }
         reset();  //delete data from file
-        //add the data back into file
+        //add the data back into file in sorted form
         try {
             FileOutputStream fos=this.openFileOutput(filename, Context.MODE_APPEND);
             BufferedWriter osw=new BufferedWriter(new OutputStreamWriter(fos));
