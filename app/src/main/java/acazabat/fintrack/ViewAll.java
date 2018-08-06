@@ -94,11 +94,12 @@ public class ViewAll extends AppCompatActivity {
                         monthtotal=monthtotal+value;
                     }
 
-                scrollText=scrollText+ filename+" TOTAL= "+ Double.toString(monthtotal) +"\n";
+                scrollText=scrollText+ filename+" TOTAL= "+ String.format("%.2f", monthtotal) +"\n";
+
                 int c=0;
                 while (fieldarray[c]!=null){
                     //check for fields, and display
-                    scrollText=scrollText+ fieldarray[c]+valuearray[c]+"\n";
+                    scrollText=scrollText+ fieldarray[c]+String.format("%.2f", valuearray[c])+"\n";
                     c++;
                 }
                 scrollText=scrollText+"\n";

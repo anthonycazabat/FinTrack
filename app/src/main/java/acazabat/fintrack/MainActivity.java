@@ -316,8 +316,8 @@ public class MainActivity extends AppCompatActivity {
         }
         optimalSpending=(finish*dayOfTheMonth)/daysInMonth;
         //add the max spending value(finish) into the textview
-        textViewoptimal.setText(Double.toString(finish));
-
+        textViewoptimal.setText(String.format("%.2f", finish));
+        //textViewoptimal.setText(Double.toString(String.format("%.2f", finish)));
         //give initial values for max and min y
             rangeMinY = 0;
         rangeMaxY=yArray[0];
@@ -332,7 +332,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //put the current spending amount into a text view.
-        textViewcurrent.setText(Double.toString(y));
+        //textViewcurrent.setText(Double.toString(y));
+        textViewcurrent.setText(String.format("%.2f", y));
         //find absolute max and min
         if (optimalSpending>= y){
             rangeMaxY=optimalSpending;
